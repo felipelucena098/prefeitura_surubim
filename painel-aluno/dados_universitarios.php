@@ -79,6 +79,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
 
 
                     <td>
+                        <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
                         <a href="index.php?pag=<?php echo $pag ?>&funcao=endereco&id=<?php echo $id ?>" class='text-info mr-1' title='Ver Endereço'><i class='fas fa-home'></i></a>
                    </td>
                </tr>
