@@ -59,6 +59,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                     $email = $res[$i]['email'];
                     $telefone = $res[$i]['telefone'];
                     $id = $res[$i]['id'];
+                    $limitar_upload = $res[$i]['limitar_upload'];
 
                     
 
@@ -129,6 +130,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                       $email2 = $res[0]['email'];
                       $telefone2 = $res[0]['telefone'];
                       $id_usuario = $res[0]['id_usuario'];
+                      $limitar_update2 = $res[0]['limitar_update'];
 
 
 
@@ -241,15 +243,14 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                         <label >Telefone</label>
                         <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
                     </div>
-
                     
-
+                    
                 </div>
 
-                <div class="form-group">
-                        <label >Anexar Documentos</label>
-                        <input type="file" class="form-control" id="documentos" name="documentos">
-                </div>
+            <div class="form-group">
+                        <label >Liberar Upload - Liberar Upload de Arquivo (0) / Block Upload (1)</label>
+                        <input value="<?php echo @$limitar_update2 ?>" type="text" class="form-control" id="upload" name="upload" placeholder="">
+                    </div>
 
                 
             </div>

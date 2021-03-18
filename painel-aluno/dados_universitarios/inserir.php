@@ -114,7 +114,7 @@ if(isset($_FILES['documentos'])){
 
 
 
-	if($id == "" ){
+if($id == "" ){
 	$res = $pdo->prepare("INSERT INTO dados_pessoais SET id_usuario = :id_usuario, nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1', documentos = :documentos");
 
 	move_uploaded_file($_FILES['documentos']['tmp_name'], $dir.$nome_arquivo);
@@ -136,17 +136,20 @@ if(isset($_FILES['documentos'])){
 
 	$res->execute();
 
-	echo 'Salvo com Sucesso!';	
+	echo 'Salvo com Sucesso!';
+	exit();
+	
 }
 
-$query = $pdo->query("SELECT * FROM dados_pessoais where limitar_update = '0' and id_usuario = '$_SESSION[id_usuario]' ");
+$query = $pdo->query("SELECT * FROM dados_pessoais where limitar_update = '1' and id_usuario = '$_SESSION[id_usuario]' ");
 $res2 = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res2);
 
-if ($total_reg == 0) {
-		echo "Você não tem permissão para atualizar o arquivo anexado. Entre em contato com o suporte!";
-		exit();
-}	
+if ($total_reg > 0) {
+	echo "Você não possui permissão para atualizar os dados! Entre em contato com o suporte!";
+	exit();
+}
+
 	if($id != ""){
 
 	$res2 = $pdo->prepare("UPDATE dados_pessoais SET  documentos = :documentos, limitar_update = '1' WHERE id = '$id'");
