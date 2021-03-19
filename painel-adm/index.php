@@ -79,7 +79,7 @@ $idUsuario = @$res[0]['id'];
                 <!-- Sidebar - Brand -->
                 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
 
-                    <div class="sidebar-brand-text mx-3">Universitários</div>
+                    <div class="sidebar-brand-text mx-3">Administrador</div>
                 </a>
 
                 <!-- Divider -->

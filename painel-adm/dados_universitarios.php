@@ -6,14 +6,19 @@ require_once("../conexao.php");
 if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
     echo "<script language='javascript'> window.location='../login.php' </script>";
 
+//RECUPERAR DADOS DO USUÁRIO
+$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$nome_usu = @$res[0]['nome'];
+$email_usu = @$res[0]['email'];
+$cpf_usu = @$res[0]['cpf'];
+$idUsuario = @$res[0]['id'];
+
+
+
 }
 
 ?>
-<div class="row mt-4 mb-4">
-    <a type="button" id="cadastrar" class="btn-info btn-sm ml-3 d-none d-md-block"  href="index.php?pag=<?php echo $pag ?>&funcao=novo">Cadastrar Dados Iniciais</a>
-    <a type="button" class="btn-info btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
-</div>
-
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
 
@@ -70,7 +75,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
 
                   <tr>
                         <td><?php echo $nome ?></td>
-                        <td><?php echo $documentos ?></td>;
+                        <td><?php echo $documentos ?></td>
                         <td><?php echo $cpf ?></td>
                         <td><?php echo $rg ?></td>
                         <td><?php echo $orgao_exp ?></td>
@@ -339,6 +344,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                 <?php 
                 if (@$_GET['funcao'] == 'endereco') {
                     
+
                     $id2 = $_GET['id'];
 
                     $query = $pdo->query("SELECT * FROM dados_pessoais where id = '$id2' ");
@@ -359,8 +365,16 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                       $email3 = $res[0]['email'];
                       $telefone3 = $res[0]['telefone'];
                       $documentos3 = $res[0]['documentos'];
+                      $id_usuario3 = $res[0]['id_usuario'];
                 } 
 
+                    $query = $pdo->query("SELECT * FROM usuario where id = '$id_usuario3' ");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                    $nome_usu = @$res[0]['nome'];
+                    $idUsuario = @$res[0]['id']; 
+
+                    $nome_pasta = $idUsuario." - ".$nome_usu;
 
                 ?>
 
@@ -370,7 +384,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                     <span><b>CEP: </b> <i><?php echo $cep3 ?><br>
                     <span><b>Telefone: </b> <i><?php echo $telefone3 ?><br>
                     <span><b>Email: </b> <i><?php echo $email3 ?><br>
-                    <span><b>Documentos: </b> <a target="_blank" href="../painel-aluno/arquivos/<?php echo $documentos3 ?>"><i><?php echo $documentos3 ?><br>
+                    <span><b>Documentos: </b> <a target="_blank" href="../painel-aluno/arquivos-alunos/<?php echo $nome_pasta ?>/<?php echo $documentos3 ?>"><i><?php echo $documentos3 ?><br>
 
             </div>
             

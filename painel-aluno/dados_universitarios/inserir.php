@@ -90,7 +90,8 @@ if($antigo2 != $email){
 	}
 }
 
-$nome_arquivo = "Documentos - ".$idUsuario."-".$nome_usu.".pdf";
+$nome_pasta = $idUsuario." - ".$nome_usu;
+$nome_arquivo = "Documentos Pessoais  - ". $idUsuario ."-".$nome_usu.".pdf";
 
 if(isset($_FILES['documentos'])){
       date_default_timezone_set("Brazil/East"); //Definindo timezone padrão
@@ -98,7 +99,7 @@ if(isset($_FILES['documentos'])){
       //$nome_arquivo_editado = preg_replace('/[ -]+/' , '-' , @$_FILES['arquivo']['name']);
       //$ext2 = pathinfo($_FILES['documentos']['name'], PATHINFO_EXTENSION);
       //$ext = strtolower(substr($_FILES['documentos']['name'],-4)); //Pegando extensão do arquivo
-      $dir = '../arquivos/'; //Diretório para uploads
+       $dir = '../arquivos-alunos/'. $nome_pasta . '/'; //Diretório para uploads
 
     if($_FILES['documentos']['size'] > 1048576){
     	echo "O arquivo ultrapassa 1 MB!";
@@ -117,7 +118,14 @@ if(isset($_FILES['documentos'])){
 if($id == "" ){
 	$res = $pdo->prepare("INSERT INTO dados_pessoais SET id_usuario = :id_usuario, nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1', documentos = :documentos");
 
-	move_uploaded_file($_FILES['documentos']['tmp_name'], $dir.$nome_arquivo);
+	if (is_dir($dir)){
+		move_uploaded_file($_FILES['documentos']['tmp_name'], $dir.$nome_arquivo);
+	}else{
+		mkdir($dir,0755,true);
+		move_uploaded_file($_FILES['documentos']['tmp_name'], $dir.$nome_arquivo);
+	}
+
+	
 
 	$res->bindValue(":id_usuario", $idUsuario);
 	$res->bindValue(":nome", $nome);
