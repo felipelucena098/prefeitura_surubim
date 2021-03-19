@@ -31,6 +31,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                         <th>Semestre</th>
                         <th>Comprovante de Matrícula</th>
                         <th>Comprovante de Contrato do Transporte</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
 
@@ -62,6 +63,10 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                         <td><?php echo $semestre ?></td>
                         <td><?php echo $comprovante ?></td>
                         <td><?php echo $contrato_transporte ?></td>
+
+                        <td>
+                            <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
+                        </td>
                </tr>
            <?php } ?>
 
