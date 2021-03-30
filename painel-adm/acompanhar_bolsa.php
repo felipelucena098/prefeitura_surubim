@@ -18,7 +18,16 @@ $idUsuario = @$res[0]['id'];
 
 }
 
+
+
 ?>
+
+<div class="row mt-4 mb-4">
+    <a type="button" id="cadastrar" class="btn-info btn-sm ml-3 d-none d-md-block"  href="index.php?pag=<?php echo $pag ?>&funcao=novo">Cadastrar Resultado</a>
+    <a type="button" class="btn-info btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
+    
+</div>
+
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
 
@@ -28,12 +37,9 @@ $idUsuario = @$res[0]['id'];
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Documentos</th>
-                        <th>CPF</th>
-                        <th>RG</th>
-                        <th>Orgão Expedidor</th>
-                        <th>NIS</th>
-                        <th>Data de Nascimento</th>
+                        <th>Situação da Documentação</th>
+                        <th>Situação da Documentação da Faculdade</th>
+                        <th>Valor da Bolsa</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -42,7 +48,7 @@ $idUsuario = @$res[0]['id'];
 
                  <?php 
 
-                 $query = $pdo->query("SELECT * FROM dados_pessoais order by id asc");
+                 $query = $pdo->query("SELECT * FROM situacao order by id asc");
                  $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                  for ($i=0; $i < count($res); $i++) { 
@@ -50,37 +56,24 @@ $idUsuario = @$res[0]['id'];
                   }
 
                     $nome = $res[$i]['nome'];
-                    $documentos = $res[$i]['documentos'];
-                    $cpf = $res[$i]['cpf'];
-                    $rg = $res[$i]['rg'];
-                    $orgao_exp = $res[$i]['orgao_exp'];
-                    $rg = $res[$i]['rg'];
-                    $nis = $res[$i]['nis'];
-                    $nasc = $res[$i]['nasc'];
-                    $rua = $res[$i]['rua'];
-                    $bairro = $res[$i]['bairro'];
-                    $cep = $res[$i]['cep'];
-                    $uf = $res[$i]['uf'];
-                    $email = $res[$i]['email'];
-                    $telefone = $res[$i]['telefone'];
+                    $s_documentos = $res[$i]['s_documentos'];
+                    $s_matricula = $res[$i]['s_matricula'];
+                    $valor_b = $res[$i]['valor_b'];
                     $id = $res[$i]['id'];
-                    $limitar_upload = $res[$i]['limitar_upload'];
+                    $id_usuario = $res[$i]['id_usuario'];
 
                     
 
-                   
+                
 
                   ?>
 
 
                   <tr>
                         <td><?php echo $nome ?></td>
-                        <td><?php echo $documentos?></td>
-                        <td><?php echo $cpf ?></td>
-                        <td><?php echo $rg ?></td>
-                        <td><?php echo $orgao_exp ?></td>
-                        <td><?php echo $nis ?></td>
-                        <td><?php echo $nasc ?></td>
+                        <td><?php echo $s_documentos ?></td>
+                        <td><?php echo $s_matricula ?></td>
+                        <td><?php echo $valor_b ?></td>
                         
 
 
@@ -119,23 +112,12 @@ $idUsuario = @$res[0]['id'];
                     $query = $pdo->query("SELECT * FROM dados_pessoais where id = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                      $nome2 = $res[0]['nome'];
-                      $documentos2 = $res[0]['documentos'];
-                      $cpf2 = $res[0]['cpf'];
-                      $rg2 = $res[0]['rg'];
-                      $org_exp2 = $res[0]['org_exp '];
-                      $rg2 = $res[0]['rg'];
-                      $org_exp2 = $res[0]['orgao_exp'];
-                      $nis2 = $res[0]['nis'];
-                      $nasc2 = $res[0]['nasc'];
-                      $rua2 = $res[0]['rua'];
-                      $bairro2 = $res[0]['bairro'];
-                      $cep2 = $res[0]['cep'];
-                      $uf2 = $res[0]['uf'];
-                      $email2 = $res[0]['email'];
-                      $telefone2 = $res[0]['telefone'];
-                      $id_usuario = $res[0]['id_usuario'];
-                      $limitar_update2 = $res[0]['limitar_update'];
+                    $nome2 = $res[0]['nome'];
+                    $s_documentos2 = $res[0]['s_documentos'];
+                    $s_matricula2 = $res[0]['s_matricula'];
+                    $valor_b2 = $res[0]['valor_b'];
+
+                      
 
 
 
@@ -156,109 +138,26 @@ $idUsuario = @$res[0]['id'];
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label >Nome</label>
-                        <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
+                            <label >Nome</label>
+                            <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome" name="nome" placeholder="">
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                           <div class="form-group">
-                            <label >CPF</label>
-                            <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                       <div class="form-group">
-                        <label >RG</label>
-                        <input value="<?php echo @$rg2 ?>" type="text" class="form-control" id="rg" name="rg" placeholder="RG">
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
                     <div class="form-group">
-                        <label >Orgão Expedidor</label>
-                        <input value="<?php echo @$org_exp2 ?>" type="text" class="form-control" id="orgao_exp" name="orgao_exp" placeholder="Orgão Expedidor">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Data de Nascimento</label>
-                        <input value="<?php echo @$nasc2 ?>" type="text" class="form-control" id="nasc" name="nasc" placeholder="Data de Nascimento">
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >NIS</label>
-                        <input value="<?php echo @$nis2 ?>" type="text" class="form-control" id="nis" name="nis" placeholder="NIS">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Rua</label>
-                        <input value="<?php echo @$rua2 ?>" type="text" class="form-control" id="rua" name="rua" placeholder="Rua">
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                         <label >Bairro</label>
-                        <input value="<?php echo @$bairro2 ?>" type="text" class="form-control" id="bairro" name="bairro" placeholder="Rua">
-                        
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >UF</label>
-                        <input value="<?php echo @$uf2 ?>" type="text" class="form-control" id="uf" name="uf" placeholder="UF">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                    <label >CEP</label>
-                    <input value="<?php echo @$cep2 ?>" type="text" class="form-control" id="cep" name="cep" placeholder="CEP">
-             </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >E-Mail</label>
-                        <input value="<?php echo @$email2 ?>" type="email" class="form-control" id="email" name="email" placeholder="E-mail">
-                        
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Telefone</label>
-                        <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
+                            <label >Situação da Documentação</label>
+                            <input value="<?php echo @$s_documento2 ?>" type="text" class="form-control" id="s_documento" name="s_documento" placeholder="">
                     </div>
                     
-                    
-                </div>
-
-            <div class="form-group">
-                        <label >Liberar Upload - Liberar Upload de Arquivo (0) / Block Upload (1)</label>
-                        <input value="<?php echo @$limitar_update2 ?>" type="text" class="form-control" id="upload" name="upload" placeholder="">
+                    <div class="form-group">
+                        <label >Situação da documentação da Faculdade</label>
+                        <input value="<?php echo @$s_matricula2 ?>" type="text" class="form-control" id="s_matricula" name="s_matricula" placeholder="">
+                    </div>
+                   
+                    <div class="form-group">
+                        <label >Valor da Bolsa</label>
+                        <input value="<?php echo @$valor_b2 ?>" type="text" class="form-control" id="valor_b" name="valor_b" placeholder="">
                     </div>
 
-                
-            </div>
+  
+     
 
             
 
@@ -278,6 +177,7 @@ $idUsuario = @$res[0]['id'];
 
 
                     <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
+                    <input value="<?php echo @$_GET['id_usuario'] ?>" type="hidden" name="txtid3" id="txtid3">
                     <input value="<?php echo @$cpf2 ?>" type="hidden" name="antigo" id="antigo">
                     <input value="<?php echo @$email2 ?>" type="hidden" name="antigo2" id="antigo2">
 
@@ -368,14 +268,13 @@ $idUsuario = @$res[0]['id'];
                       $id_usuario3 = $res[0]['id_usuario'];
                 } 
 
-                 $query = $pdo->query("SELECT * FROM usuario where id = '$id_usuario3' ");
+                    $query = $pdo->query("SELECT * FROM usuario where id = '$id_usuario3' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                     $nome_usu = @$res[0]['nome'];
                     $idUsuario = @$res[0]['id']; 
 
                     $nome_pasta = $idUsuario." - ".$nome_usu;
-                    
 
                 ?>
 

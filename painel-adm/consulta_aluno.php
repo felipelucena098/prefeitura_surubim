@@ -5,17 +5,6 @@ require_once("../conexao.php");
     //verificar se o usuário está autenticado
 if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
     echo "<script language='javascript'> window.location='../login.php' </script>";
-
-//RECUPERAR DADOS DO USUÁRIO
-$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$nome_usu = @$res[0]['nome'];
-$email_usu = @$res[0]['email'];
-$cpf_usu = @$res[0]['cpf'];
-$idUsuario = @$res[0]['id'];
-
-
-
 }
 
 ?>
@@ -28,12 +17,8 @@ $idUsuario = @$res[0]['id'];
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Documentos</th>
                         <th>CPF</th>
-                        <th>RG</th>
-                        <th>Orgão Expedidor</th>
-                        <th>NIS</th>
-                        <th>Data de Nascimento</th>
+                        <th>Cadastrar Situação do Aluno</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -50,37 +35,17 @@ $idUsuario = @$res[0]['id'];
                   }
 
                     $nome = $res[$i]['nome'];
-                    $documentos = $res[$i]['documentos'];
                     $cpf = $res[$i]['cpf'];
-                    $rg = $res[$i]['rg'];
-                    $orgao_exp = $res[$i]['orgao_exp'];
-                    $rg = $res[$i]['rg'];
-                    $nis = $res[$i]['nis'];
-                    $nasc = $res[$i]['nasc'];
-                    $rua = $res[$i]['rua'];
-                    $bairro = $res[$i]['bairro'];
-                    $cep = $res[$i]['cep'];
-                    $uf = $res[$i]['uf'];
-                    $email = $res[$i]['email'];
-                    $telefone = $res[$i]['telefone'];
-                    $id = $res[$i]['id'];
-                    $limitar_upload = $res[$i]['limitar_upload'];
-
-                    
-
-                   
+                    $id = $res[$i]['id']; 
 
                   ?>
 
 
                   <tr>
                         <td><?php echo $nome ?></td>
-                        <td><?php echo $documentos?></td>
                         <td><?php echo $cpf ?></td>
-                        <td><?php echo $rg ?></td>
-                        <td><?php echo $orgao_exp ?></td>
-                        <td><?php echo $nis ?></td>
-                        <td><?php echo $nasc ?></td>
+                        <td style="text-align: center"><a href="index.php?pag=acompanhar_bolsa"><input class="btn btn-primary" type="button" name="acompanhar_bolsa" value="Cadastrar"></td>
+    
                         
 
 
@@ -155,16 +120,14 @@ $idUsuario = @$res[0]['id'];
             <form id="form" method="POST" action="../inserir.php" enctype="multipart/form-data">
                 <div class="modal-body">
 
-                    <div class="form-group">
-                        <label >Nome</label>
-                        <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
-                    </div>
+                    
 
                     <div class="row">
                         <div class="col-md-6">
                            <div class="form-group">
                             <label >CPF</label>
                             <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF">
+                        </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -174,92 +137,9 @@ $idUsuario = @$res[0]['id'];
                     </div>
 
                 </div>
-            </div>
+            
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Orgão Expedidor</label>
-                        <input value="<?php echo @$org_exp2 ?>" type="text" class="form-control" id="orgao_exp" name="orgao_exp" placeholder="Orgão Expedidor">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Data de Nascimento</label>
-                        <input value="<?php echo @$nasc2 ?>" type="text" class="form-control" id="nasc" name="nasc" placeholder="Data de Nascimento">
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >NIS</label>
-                        <input value="<?php echo @$nis2 ?>" type="text" class="form-control" id="nis" name="nis" placeholder="NIS">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Rua</label>
-                        <input value="<?php echo @$rua2 ?>" type="text" class="form-control" id="rua" name="rua" placeholder="Rua">
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                         <label >Bairro</label>
-                        <input value="<?php echo @$bairro2 ?>" type="text" class="form-control" id="bairro" name="bairro" placeholder="Rua">
-                        
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >UF</label>
-                        <input value="<?php echo @$uf2 ?>" type="text" class="form-control" id="uf" name="uf" placeholder="UF">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                    <label >CEP</label>
-                    <input value="<?php echo @$cep2 ?>" type="text" class="form-control" id="cep" name="cep" placeholder="CEP">
-             </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >E-Mail</label>
-                        <input value="<?php echo @$email2 ?>" type="email" class="form-control" id="email" name="email" placeholder="E-mail">
-                        
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Telefone</label>
-                        <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
-                    </div>
-                    
-                    
-                </div>
-
-            <div class="form-group">
-                        <label >Liberar Upload - Liberar Upload de Arquivo (0) / Block Upload (1)</label>
-                        <input value="<?php echo @$limitar_update2 ?>" type="text" class="form-control" id="upload" name="upload" placeholder="">
-                    </div>
-
-                
-            </div>
-
+      
             
 
 

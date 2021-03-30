@@ -26,7 +26,7 @@ $idUsuario = @$res[0]['id'];
     $menu3 = "";
     $menu4 = "dados_faculdade";
     $menu5 = "acompanhar_bolsa";
-    $menu6 = "relatorio_aluno";
+    $menu6 = "consulta_aluno";
     $menu7 = "";
 
  

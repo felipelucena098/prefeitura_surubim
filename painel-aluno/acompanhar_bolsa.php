@@ -48,9 +48,9 @@
 
                               <tr>
                                 <td><?php echo $nome ?></td>
-                                <td><?php echo $banco ?></td>
-                                <td><?php echo $n_agencia ?></td>
-                                <td><?php echo $cod_op ?></td>
+                                <td><?php echo $s_documentos ?></td>
+                                <td><?php echo $s_matricula ?></td>
+                                <td><?php echo $valor_b ?></td>
                            </tr>
                        <?php } ?>
 
@@ -80,13 +80,6 @@
 
                         $query = $pdo->query("SELECT * FROM dados_socio where id = '" . $id2 . "' ");
                         $res = $query->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-                      
-                        
-
-
 
                     } else {
                         $titulo = "Inserir Registro";

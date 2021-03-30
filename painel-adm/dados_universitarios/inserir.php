@@ -25,6 +25,7 @@ $cep = $_POST['cep'];
 $email = $_POST['email'];
 $telefone = $_POST['telefone'];
 $uf = $_POST['uf'];
+$obs = $_POST['obs'];
 
 
 
@@ -70,7 +71,7 @@ if($antigo2 != $email){
 
 
 	if($id != "" ){
-	$res = $pdo->prepare(" UPDATE dados_pessoais SET nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1' WHERE id = '$id'");
+	$res = $pdo->prepare(" UPDATE dados_pessoais SET nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1', obs = :obs WHERE id = '$id'");
 
 	$res->bindValue(":nome", $nome);
 	$res->bindValue(":cpf", $cpf);
@@ -84,6 +85,7 @@ if($antigo2 != $email){
 	$res->bindValue(":email", $email);
 	$res->bindValue(":telefone", $telefone);
 	$res->bindValue(":uf", $uf);
+	$res->bindValue(":obs", $obs);
 
 	$res->execute();
 

@@ -153,6 +153,8 @@ $query = $pdo->query("SELECT * FROM dados_pessoais where limitar_update = '1' an
 $res2 = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res2);
 
+
+
 if ($total_reg > 0) {
 	echo "Você não possui permissão para atualizar os dados! Entre em contato com o suporte!";
 	exit();
