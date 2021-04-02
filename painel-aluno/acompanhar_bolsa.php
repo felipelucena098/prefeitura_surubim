@@ -6,6 +6,14 @@
             if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                 echo "<script language='javascript'> window.location='../login.php' </script>";
 
+$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$nome_usu = @$res[0]['nome'];
+$email_usu = @$res[0]['email'];
+$cpf_usu = @$res[0]['cpf'];
+$senha_usu =@$res[0]['senha'];
+$idUsuario = @$res[0]['id'];
+
             }
 
             ?>
@@ -30,14 +38,14 @@
 
                              <?php 
 
-                             $query = $pdo->query("SELECT * FROM situacao order by id asc");
+                             $query = $pdo->query("SELECT * FROM dados_pessoais inner join situacao on dados_pessoais.id_usuario = situacao.id_usuario ");
                              $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                              for ($i=0; $i < count($res); $i++) { 
                               foreach ($res[$i] as $key => $value) {
                               }
                               $nome = $res[$i]['nome'];
-                              $s_documentos = $res[$i]['s_documentos'];
+                              $s_documentos = $res[$i]['s_documento'];
                               $s_matricula = $res[$i]['s_matricula'];
                               $valor_b = $res[$i]['valor_b'];
                               $id = $res[$i]['id'];

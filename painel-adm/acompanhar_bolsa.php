@@ -48,7 +48,7 @@ $idUsuario = @$res[0]['id'];
 
                  <?php 
 
-                 $query = $pdo->query("SELECT * FROM situacao order by id asc");
+                 $query = $pdo->query("SELECT * FROM dados_pessoais inner join situacao on dados_pessoais.id_usuario = situacao.id_usuario");
                  $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                  for ($i=0; $i < count($res); $i++) { 
@@ -56,7 +56,7 @@ $idUsuario = @$res[0]['id'];
                   }
 
                     $nome = $res[$i]['nome'];
-                    $s_documentos = $res[$i]['s_documentos'];
+                    $s_documentos = $res[$i]['s_documento'];
                     $s_matricula = $res[$i]['s_matricula'];
                     $valor_b = $res[$i]['valor_b'];
                     $id = $res[$i]['id'];

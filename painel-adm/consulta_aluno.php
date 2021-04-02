@@ -18,7 +18,6 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                     <tr>
                         <th>Nome</th>
                         <th>CPF</th>
-                        <th>Cadastrar Situação do Aluno</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -37,6 +36,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                     $nome = $res[$i]['nome'];
                     $cpf = $res[$i]['cpf'];
                     $id = $res[$i]['id']; 
+                    $id_usuario = $res[$i]['id_usuario']; 
 
                   ?>
 
@@ -44,15 +44,12 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                   <tr>
                         <td><?php echo $nome ?></td>
                         <td><?php echo $cpf ?></td>
-                        <td style="text-align: center"><a href="index.php?pag=acompanhar_bolsa"><input class="btn btn-primary" type="button" name="acompanhar_bolsa" value="Cadastrar"></td>
     
                         
 
 
                     <td>
-                       <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
-                       
-                        <a href="index.php?pag=<?php echo $pag ?>&funcao=endereco&id=<?php echo $id ?>" class='text-info mr-1' title='Ver Endereço'><i class='fas fa-home'></i></a>
+                       <a href="index.php?pag=<?php echo $pag ?>&funcao=validacao&id_usuario=<?php echo $id_usuario ?>" class='text-primary mr-1' title='Validar'><i class="far fa-check-square"></i></a>
                    </td>
                </tr>
            <?php } ?>
@@ -80,6 +77,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                 if (@$_GET['funcao'] == 'editar') {
                     $titulo = "Editar Registro";
                     $id2 = $_GET['id'];
+                    $id3 = $_GET['id_usuario'];
 
                     $query = $pdo->query("SELECT * FROM dados_pessoais where id = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -158,6 +156,84 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
 
 
                     <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
+                    <input value="<?php echo @$cpf2 ?>" type="hidden" name="antigo" id="antigo">
+                    <input value="<?php echo @$email2 ?>" type="hidden" name="antigo2" id="antigo2">
+
+                    <button type="button" id="btn-fechar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="btn-salvar" id="btn-salvar" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End -->
+
+<div class="modal fade" id="modal-validacao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <?php 
+                if (@$_GET['funcao'] == 'validacao') {
+                    $titulo = "Validar Documentos";
+                    $id3 = $_GET['id_usuario'];
+
+                    $query = $pdo->query("SELECT * FROM dados_pessoais where id = '" . $id3 . "' ");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                    
+
+
+
+                } else {
+                    $titulo = "Inserir Registro";
+
+                }
+
+
+                ?>
+                
+                <h5 class="modal-title" id="exampleModalLabel"><?php echo $titulo ?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form" method="POST" action="../painel-adm/acompanhar_bolsa/inserir.php" enctype="multipart/form-data">
+                <div class="modal-body">
+
+                    
+                      <div class="form-group">
+                          <label >Situação da Documentação</label>
+                          <input  type="text" class="form-control" id="s_documento" name="s_documento">
+                      </div>
+
+                      <div class="form-group">
+                          <label >Situação da Documentação Universitária</label>
+                          <input  type="text" class="form-control" id="s_matricula" name="s_matricula">
+                      </div>
+
+                      <div class="form-group">
+                          <label >Valor da Bolsa</label>
+                          <input  type="text" class="form-control" id="valor_b" name="valor_b">
+                      </div>
+
+
+
+                    <small>
+                        <div id="mensagem">
+
+                        </div>
+                    </small> 
+
+                </div>
+
+
+
+                <div class="modal-footer">
+
+
+
+                    <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
+                    <input value="<?php echo @$_GET['id_usuario'] ?>" type="hidden" name="txtid3" id="txtid3">
                     <input value="<?php echo @$cpf2 ?>" type="hidden" name="antigo" id="antigo">
                     <input value="<?php echo @$email2 ?>" type="hidden" name="antigo2" id="antigo2">
 
@@ -276,6 +352,9 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
 
 
 
+
+
+
 <?php 
 
 if (@$_GET["funcao"] != null && @$_GET["funcao"] == "novo") {
@@ -292,6 +371,10 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 
 if (@$_GET["funcao"] != null && @$_GET["funcao"] == "endereco") {
     echo "<script>$('#modal-endereco').modal('show');</script>";
+}
+
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "validacao") {
+    echo "<script>$('#modal-validacao').modal('show');</script>";
 }
 
 

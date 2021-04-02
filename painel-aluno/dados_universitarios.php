@@ -6,6 +6,14 @@
 if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
     echo "<script language='javascript'> window.location='../login.php' </script>";
 
+$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$nome_usu = @$res[0]['nome'];
+$email_usu = @$res[0]['email'];
+$cpf_usu = @$res[0]['cpf'];
+$senha_usu =@$res[0]['senha'];
+$idUsuario = @$res[0]['id'];    
+
 }
 
 ?>
