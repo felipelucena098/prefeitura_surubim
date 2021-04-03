@@ -26,7 +26,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
 
                  <?php 
 
-                 $query = $pdo->query("SELECT * FROM dados_pessoais order by id asc");
+                 $query = $pdo->query("SELECT * FROM dados_pessoais where filtro != '1' ");
                  $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                  for ($i=0; $i < count($res); $i++) { 
@@ -197,7 +197,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="form" method="POST" action="../painel-adm/acompanhar_bolsa/inserir.php" enctype="multipart/form-data">
+            <form id="form" method="POST" action="../painel-adm/acompanhar_bolsa/inserir.php">
                 <div class="modal-body">
 
                     
@@ -214,6 +214,14 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                       <div class="form-group">
                           <label >Valor da Bolsa</label>
                           <input  type="text" class="form-control" id="valor_b" name="valor_b">
+                      </div>
+                      <div class="form-group">
+                          <label>Documentação Pessoal</label>
+                          <select id="opcoes" name="opcoes" required="">
+                              <option selected=""></option>
+                              <option value="1">Documentação Pessoal Aprovada</option>
+                              <option value="0">Documentação Pessoal Reprovada</option>                          
+                            </select>
                       </div>
 
 

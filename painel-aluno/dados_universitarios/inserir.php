@@ -116,7 +116,7 @@ if(isset($_FILES['documentos'])){
 
 
 if($id == "" ){
-	$res = $pdo->prepare("INSERT INTO dados_pessoais SET id_usuario = :id_usuario, nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1', documentos = :documentos");
+	$res = $pdo->prepare("INSERT INTO dados_pessoais SET id_usuario = :id_usuario, nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1', documentos = :documentos , filtro = '0'");
 
 	if (is_dir($dir)){
 		move_uploaded_file($_FILES['documentos']['tmp_name'], $dir.$nome_arquivo);

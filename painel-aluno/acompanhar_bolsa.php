@@ -38,7 +38,7 @@ $idUsuario = @$res[0]['id'];
 
                              <?php 
 
-                             $query = $pdo->query("SELECT * FROM dados_pessoais inner join situacao on dados_pessoais.id_usuario = situacao.id_usuario ");
+                             $query = $pdo->query("SELECT * FROM dados_pessoais inner join situacao on dados_pessoais.id_usuario = situacao.id_usuario WHERE situacao.id_usuario = '$idUsuario'");
                              $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                              for ($i=0; $i < count($res); $i++) { 
