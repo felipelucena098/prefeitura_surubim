@@ -1,22 +1,32 @@
 <?php 
- require_once("../conexao.php"); 
+require_once("../conexao.php"); 
 
 @session_start();
     //verificar se o usuário está autenticado
-if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
+if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
     echo "<script language='javascript'> window.location='../login.php' </script>";
 
+//RECUPERAR DADOS DO USUÁRIO
+$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
+$res = $query->fetchAll(PDO::FETCH_ASSOC);
+$nome_usu = @$res[0]['nome'];
+$email_usu = @$res[0]['email'];
+$cpf_usu = @$res[0]['cpf'];
+$idUsuario = @$res[0]['id'];
+
+
+
 }
+
+
 
 ?>
 
 <div class="row mt-4 mb-4">
-    <a type="button" id="cadastrar" class="btn-info btn-sm ml-3 d-none d-md-block"  href="index.php?pag=<?php echo $pag ?>&funcao=novo">Anexar Documentos</a>
+    <a type="button" id="cadastrar" class="btn-info btn-sm ml-3 d-none d-md-block"  href="index.php?pag=<?php echo $pag ?>&funcao=novo">Cadastrar Resultado</a>
     <a type="button" class="btn-info btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
     
 </div>
-
-
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -26,8 +36,10 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Comprovante de Matrícula</th>
-                        <th>Observações</th>
+                        <th>Nome</th>
+                        <th>Situação da Documentação</th>
+                        <th>Situação da Documentação da Faculdade</th>
+                        <th>Valor da Bolsa</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -36,27 +48,39 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
 
                  <?php 
 
-                 $query = $pdo->query("SELECT * FROM comprovante where id_usuario = '" . $idUsuario . "' ");
+                 $query = $pdo->query("SELECT * FROM dados_pessoais inner join situacao on dados_pessoais.id_usuario = situacao.id_usuario");
                  $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                  for ($i=0; $i < count($res); $i++) { 
                   foreach ($res[$i] as $key => $value) {
                   }
 
-                  $comprovante = $res[$i]['comprovante'];
-                  $obs = $res[$i]['obs']; 
-                  $id = $res[$i]['id'];
+                    $nome = $res[$i]['nome'];
+                    $s_documentos = $res[$i]['s_documento'];
+                    $s_matricula = $res[$i]['s_matricula'];
+                    $valor_b = $res[$i]['valor_b'];
+                    $id = $res[$i]['id'];
+                    $id_usuario = $res[$i]['id_usuario'];
 
+                    
+
+                
 
                   ?>
 
 
                   <tr>
-                        <td><?php echo $comprovante ?></td>
-                        <td><?php echo $obs ?></td>
+                        <td><?php echo $nome ?></td>
+                        <td><?php echo $s_documentos ?></td>
+                        <td><?php echo $s_matricula ?></td>
+                        <td><?php echo $valor_b ?></td>
+                        
+
 
                     <td>
                        <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
+                       
+                        <a href="index.php?pag=<?php echo $pag ?>&funcao=endereco&id=<?php echo $id ?>" class='text-info mr-1' title='Ver Endereço'><i class='fas fa-home'></i></a>
                    </td>
                </tr>
            <?php } ?>
@@ -85,12 +109,16 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                     $titulo = "Editar Registro";
                     $id2 = $_GET['id'];
 
-                    $query = $pdo->query("SELECT * FROM documentos where id = '" . $id2 . "' ");
+                    $query = $pdo->query("SELECT * FROM dados_pessoais where id = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                      $comprovante2 = $res[0]['comprovante'];
-                      $obs2 = $res[0]['obs'];
-                
+                    $nome2 = $res[0]['nome'];
+                    $s_documentos2 = $res[0]['s_documentos'];
+                    $s_matricula2 = $res[0]['s_matricula'];
+                    $valor_b2 = $res[0]['valor_b'];
+
+                      
+
 
 
                 } else {
@@ -110,11 +138,30 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label >Inserir Documentos</label>
-                        <input value="<?php echo @$comprovante2 ?>" type="file" class="form-control" id="comprovante" name="comprovante">
+                            <label >Nome</label>
+                            <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome" name="nome" placeholder="">
+                    </div>
+                    <div class="form-group">
+                            <label >Situação da Documentação</label>
+                            <input value="<?php echo @$s_documento2 ?>" type="text" class="form-control" id="s_documento" name="s_documento" placeholder="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label >Situação da documentação da Faculdade</label>
+                        <input value="<?php echo @$s_matricula2 ?>" type="text" class="form-control" id="s_matricula" name="s_matricula" placeholder="">
+                    </div>
+                   
+                    <div class="form-group">
+                        <label >Valor da Bolsa</label>
+                        <input value="<?php echo @$valor_b2 ?>" type="text" class="form-control" id="valor_b" name="valor_b" placeholder="">
                     </div>
 
-                  
+  
+     
+
+            
+
+
                     <small>
                         <div id="mensagem">
 
@@ -130,12 +177,12 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
 
 
                     <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
-            
-                     <button type="button" id="btn-fechar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <input value="<?php echo @$_GET['id_usuario'] ?>" type="hidden" name="txtid3" id="txtid3">
+                    <input value="<?php echo @$cpf2 ?>" type="hidden" name="antigo" id="antigo">
+                    <input value="<?php echo @$email2 ?>" type="hidden" name="antigo2" id="antigo2">
+
+                    <button type="button" id="btn-fechar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                     <button type="submit" name="btn-salvar" id="btn-salvar" class="btn btn-primary">Salvar</button>
-
-
-                    
                 </div>
             </form>
         </div>
@@ -197,6 +244,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                 <?php 
                 if (@$_GET['funcao'] == 'endereco') {
                     
+
                     $id2 = $_GET['id'];
 
                     $query = $pdo->query("SELECT * FROM dados_pessoais where id = '$id2' ");
@@ -216,8 +264,17 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                       $uf3 = $res[0]['uf'];
                       $email3 = $res[0]['email'];
                       $telefone3 = $res[0]['telefone'];
+                      $documentos3 = $res[0]['documentos'];
+                      $id_usuario3 = $res[0]['id_usuario'];
                 } 
 
+                    $query = $pdo->query("SELECT * FROM usuario where id = '$id_usuario3' ");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                    $nome_usu = @$res[0]['nome'];
+                    $idUsuario = @$res[0]['id']; 
+
+                    $nome_pasta = $idUsuario." - ".$nome_usu;
 
                 ?>
 
@@ -227,6 +284,7 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                     <span><b>CEP: </b> <i><?php echo $cep3 ?><br>
                     <span><b>Telefone: </b> <i><?php echo $telefone3 ?><br>
                     <span><b>Email: </b> <i><?php echo $email3 ?><br>
+                    <span><b>Documentos: </b> <a target="_blank" href="../painel-aluno/arquivos-alunos/<?php echo $nome_pasta ?>/<?php echo $documentos3 ?>"><i><?php echo $documentos3 ?><br>
 
             </div>
             
@@ -254,6 +312,8 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 if (@$_GET["funcao"] != null && @$_GET["funcao"] == "endereco") {
     echo "<script>$('#modal-endereco').modal('show');</script>";
 }
+
+
 
 ?>
 
@@ -346,40 +406,42 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "endereco") {
 
 
 
+<!--SCRIPT PARA CARREGAR IMAGEM -->
+<script type="text/javascript">
 
-                <!--SCRIPT PARA CARREGAR IMAGEM -->
-                <script type="text/javascript">
+    function carregarImg() {
 
-                    function carregarImg() {
+        var target = document.getElementById('target');
+        var file = document.querySelector("input[type=file]").files[0];
+        var reader = new FileReader();
 
-                        var target = document.getElementById('target');
-                        var file = document.querySelector("input[type=file]").files[0];
-                        var reader = new FileReader();
+        reader.onloadend = function () {
+            target.src = reader.result;
+        };
 
-                        reader.onloadend = function () {
-                            target.src = reader.result;
-                        };
-
-                        if (file) {
-                            reader.readAsDataURL(file);
+        if (file) {
+            reader.readAsDataURL(file);
 
 
-                        } else {
-                            target.src = "";
-                        }
-                    }
+        } else {
+            target.src = "";
+        }
+    }
 
-                </script>
-
+</script>
 
 
 
 
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#dataTable').dataTable({
-                            "ordering": false
-                        })
 
-                    });
-                </script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#dataTable').dataTable({
+            "ordering": false
+        })
+
+    });
+</script>
+
+
+

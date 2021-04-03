@@ -12,15 +12,6 @@ $antigo2 = $_POST['antigo2'];
 $id = $_POST['txtid2'];
 
 
-//RECUPERAR DADOS DO USUÁRIO
-$query = $pdo->query("SELECT * FROM dados_pessoais where id = '$id'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$nome_usu = @$res[0]['nome'];
-$email_usu = @$res[0]['email'];
-$cpf_usu = @$res[0]['cpf'];
-$id_usuario = @$res[0]['id_usuario'];  
-
-
 
 $nome = $_POST['nome'];
 $cpf = $_POST['cpf'];
@@ -34,6 +25,7 @@ $cep = $_POST['cep'];
 $email = $_POST['email'];
 $telefone = $_POST['telefone'];
 $uf = $_POST['uf'];
+$obs = $_POST['obs'];
 
 
 
@@ -79,10 +71,8 @@ if($antigo2 != $email){
 
 
 	if($id != "" ){
-	$res = $pdo->prepare(" UPDATE dados_pessoais SET id_usuario = :id_usuario, nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1' WHERE id = '$id'");
+	$res = $pdo->prepare(" UPDATE dados_pessoais SET nome = :nome, cpf = :cpf, rg = :rg, orgao_exp = :orgao_exp, nasc = :nasc, nis = :nis, rua = :rua, bairro = :bairro, cep = :cep, email = :email, telefone = :telefone, uf = :uf, limitar_update = '1', obs = :obs WHERE id = '$id'");
 
-
-	$res->bindValue(":id_usuario", $id_usuario);
 	$res->bindValue(":nome", $nome);
 	$res->bindValue(":cpf", $cpf);
 	$res->bindValue(":rg", $rg);
@@ -95,6 +85,7 @@ if($antigo2 != $email){
 	$res->bindValue(":email", $email);
 	$res->bindValue(":telefone", $telefone);
 	$res->bindValue(":uf", $uf);
+	$res->bindValue(":obs", $obs);
 
 	$res->execute();
 

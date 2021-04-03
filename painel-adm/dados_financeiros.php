@@ -3,20 +3,13 @@
 
             @session_start();
                 //verificar se o usuário está autenticado
-            if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
+            if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
                 echo "<script language='javascript'> window.location='../login.php' </script>";
-
-$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$nome_usu = @$res[0]['nome'];
-$email_usu = @$res[0]['email'];
-$cpf_usu = @$res[0]['cpf'];
-$senha_usu =@$res[0]['senha'];
-$idUsuario = @$res[0]['id'];
 
             }
 
             ?>
+
 
 
             <!-- DataTales Example -->
@@ -28,9 +21,14 @@ $idUsuario = @$res[0]['id'];
                             <thead>
                                 <tr>
                                     <th>Nome</th>
-                                    <th>Situação da Documentação</th>
-                                    <th>Situação da Documentação da Faculdade</th>
-                                    <th>Valor da Bolsa</th>
+                                    <th>Banco</th>
+                                    <th>Nº Agência</th>
+                                    <th>Codigo de Operação</th>
+                                    <th>Tipo da Conta</th>
+                                    <th>Nº da Conta</th>
+                                    <th>Renda do Universitário</th>
+                                    <th>Renda Familiar</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
 
@@ -38,16 +36,21 @@ $idUsuario = @$res[0]['id'];
 
                              <?php 
 
-                             $query = $pdo->query("SELECT * FROM dados_pessoais inner join situacao on dados_pessoais.id_usuario = situacao.id_usuario WHERE situacao.id_usuario = '$idUsuario'");
+                             $query = $pdo->query("SELECT * FROM dados_socio inner join usuario on dados_socio.id_usuario = usuario.id ");
                              $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                              for ($i=0; $i < count($res); $i++) { 
                               foreach ($res[$i] as $key => $value) {
                               }
+
                               $nome = $res[$i]['nome'];
-                              $s_documentos = $res[$i]['s_documento'];
-                              $s_matricula = $res[$i]['s_matricula'];
-                              $valor_b = $res[$i]['valor_b'];
+                              $n_agencia = $res[$i]['n_agencia'];
+                              $banco = $res[$i]['banco'];
+                              $cod_op = $res[$i]['cod_op'];
+                              $tipo_conta =$res[$i]['tipo_conta'];
+                              $n_conta = $res[$i]['n_conta'];
+                              $renda = $res[$i]['renda'];
+                              $renda_f = $res[$i]['renda_f'];
                               $id = $res[$i]['id'];
 
 
@@ -56,9 +59,17 @@ $idUsuario = @$res[0]['id'];
 
                               <tr>
                                 <td><?php echo $nome ?></td>
-                                <td><?php echo $s_documentos ?></td>
-                                <td><?php echo $s_matricula ?></td>
-                                <td><?php echo $valor_b ?></td>
+                                <td><?php echo $banco ?></td>
+                                <td><?php echo $n_agencia ?></td>
+                                <td><?php echo $cod_op ?></td>
+                                <td><?php echo $tipo_conta?></td>
+                                <td><?php echo $n_conta ?></td>
+                                <td><?php echo $renda ?></td>
+                                <td><?php echo $renda_f ?></td>
+                             
+                             <td>
+                                 <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
+                             </td>   
                            </tr>
                        <?php } ?>
 
@@ -86,8 +97,20 @@ $idUsuario = @$res[0]['id'];
                         $titulo = "Editar Registro";
                         $id2 = $_GET['id'];
 
-                        $query = $pdo->query("SELECT * FROM dados_socio where id = '" . $id2 . "' ");
+                        $query = $pdo->query("SELECT * FROM dados_socio where id_usuario = '" . $id2 . "' ");
                         $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
+
+                        $n_agencia2 = $res[0]['n_agencia'];
+                        $banco = $res[0]['banco'];
+                        $cod_op2 = $res[0]['cod_op'];
+                        $tipo_conta2 = $res[0]['tipo_conta'];
+                        $n_conta2 = $res[0]['n_conta'];
+                        $renda2 = $res[0]['renda'];
+                        $renda_f2 = $res[0]['renda_f'];
+                        
+
+
 
                     } else {
                         $titulo = "Inserir Registro";
@@ -116,7 +139,7 @@ $idUsuario = @$res[0]['id'];
                         <div class="row">
                             <div class="col-md-6">
                                <div class="form-group">
-                                <label >Nome</label>
+                                <label >Nº da Agência</label>
                                 <input value="<?php echo @$n_agencia2 ?>" type="text" class="form-control" id="n_agencia" name="n_agencia" placeholder="Nº da Agência" onkeyup="somenteNumeros(this);">
                             </div>
                         </div>

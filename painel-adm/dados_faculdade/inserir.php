@@ -3,18 +3,10 @@ require_once("../../conexao.php");
 
 @session_start();
     //verificar se o usuário está autenticado
-if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
+if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
     echo "<script language='javascript'> window.location='../login.php' </script>";
 
 }
-
-//RECUPERAR DADOS DO USUÁRIO
-$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$nome_usu = @$res[0]['nome'];
-$email_usu = @$res[0]['email'];
-$idUsuario = @$res[0]['id'];  
-
 
 
 $nome_faculdade = $_POST['nome_faculdade'];
@@ -41,6 +33,7 @@ if($municipio == ""){
 }
 
 $nome_pasta = $idUsuario." - ".$nome_usu;
+
 
 if(isset($_FILES['comprovante'])){
 	date_default_timezone_set("Brazil/East"); //Definindo timezone padrão
@@ -85,24 +78,14 @@ $nome_arquivo_comprovante = "Comprovante de Matrícula - ".$idUsuario."-".$nome_
 $nome_arquivo_contrato = "Comprovante de Contrato - ".$idUsuario."-".$nome_usu."-".$semestre.".pdf";
 
 
-if($id == ""){
-	$res = $pdo->prepare("INSERT INTO dados_faculdade SET id_usuario = :id_usuario, nome_faculdade = :nome_faculdade, municipio = :municipio, semestre = :semestre, limitar_update = '1',  comprovante = :comprovante, contrato_transporte = :contrato_transporte");	
+
+if($id != ""){
+	$res = $pdo->prepare("INSERT INTO dados_faculdade SET nome_faculdade = :nome_faculdade, municipio = :municipio, semestre = :semestre, limitar_update = '1',  comprovante = :comprovante, contrato_transporte = :contrato_transporte");	
 	
 
-	if(is_dir($dir)){
-		move_uploaded_file($_FILES['comprovante']['tmp_name'], $dir.$nome_arquivo_comprovante);
-    move_uploaded_file($_FILES['contrato']['tmp_name'], $dir.$nome_arquivo_contrato);
-	}else{
-    mkdir($dir,0755,true);
-    move_uploaded_file($_FILES['comprovante']['tmp_name'], $dir.$nome_arquivo_comprovante);
-    move_uploaded_file($_FILES['contrato']['tmp_name'], $dir.$nome_arquivo_contrato);
-  }
-
+}
 
 	
-
-
-$res->bindValue(":id_usuario", $idUsuario);
 $res->bindValue(":nome_faculdade", $nome_faculdade);
 $res->bindValue(":municipio", $municipio);
 $res->bindValue(":semestre", $semestre);
@@ -114,32 +97,5 @@ $res->execute();
 
 
 echo 'Salvo com Sucesso!';
-exit();
-}
-
-$query = $pdo->query("SELECT * FROM dados_faculdade where limitar_update = '1' and id_usuario = '$_SESSION[id_usuario]' ");
-$res2 = $query->fetchAll(PDO::FETCH_ASSOC);
-$total_reg = @count($res2);
-
-if ($total_reg > 0) {
-  echo "Você não possui permissão para atualizar os dados! Entre em contato com o suporte!";
-  exit();
-}
-
-if($id != ""){
-
-  $res2 = $pdo->prepare("UPDATE dados_faculdade SET  comprovante = :comprovante, contrato_transporte = :contrato_transporte, limitar_update = '1' WHERE id = '$id'");
-
-    move_uploaded_file($_FILES['comprovante']['tmp_name'], $dir.$nome_arquivo_comprovante);
-    move_uploaded_file($_FILES['contrato']['tmp_name'], $dir.$nome_arquivo_contrato);
-
-
-  $res2->bindValue(":comprovante", $nome_arquivo_comprovante);
-  $res2->bindValue(":contrato_transporte", $nome_arquivo_contrato);
-
-  $res2->execute();
-
-  echo 'Salvo com Sucesso!';
-}
 
 ?>

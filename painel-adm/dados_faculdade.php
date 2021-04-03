@@ -3,19 +3,12 @@
 
 @session_start();
     //verificar se o usuário está autenticado
-if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
+if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
     echo "<script language='javascript'> window.location='../login.php' </script>";
 
 }
 
 ?>
-
-<div class="row mt-4 mb-4">
-    <a type="button" id="cadastrar" class="btn-info btn-sm ml-3 d-none d-md-block"  href="index.php?pag=<?php echo $pag ?>&funcao=novo">Anexar Documentos</a>
-    <a type="button" class="btn-info btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
-    
-</div>
-
 
 
 <!-- DataTales Example -->
@@ -26,8 +19,12 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Documentos</th>
-                        <th>Observações</th>
+                        <th>Nome</th>
+                        <th>Instituição de Ensino</th>
+                        <th>Município</th>
+                        <th>Semestre</th>
+                        <th>Comprovante de Matrícula</th>
+                        <th>Comprovante de Contrato do Transporte</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -36,28 +33,37 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
 
                  <?php 
 
-                 $query = $pdo->query("SELECT * FROM documentos where id_usuario = '" . $idUsuario . "' ");
+                 $query = $pdo->query("SELECT * FROM dados_faculdade inner join usuario on dados_faculdade.id_usuario = usuario.id ");
                  $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                  for ($i=0; $i < count($res); $i++) { 
                   foreach ($res[$i] as $key => $value) {
                   }
-
-                    $documentos = $res[$i]['documentos'];
-                    $obs = $res[$i]['obs'];
+                    $nome = $res[$i]['nome'];
+                    $nome_faculdade = $res[$i]['nome_faculdade'];
+                    $municipio = $res[$i]['municipio'];
+                    $semestre = $res[$i]['semestre'];
+                    $comprovante = $res[$i]['comprovante'];
+                    $contrato_transporte = $res[$i]['contrato_transporte'];
                     $id = $res[$i]['id'];
 
 
                   ?>
 
 
-                  <tr>
-                        <td><?php echo $documentos ?></td>
-                        <td><?php echo $obs ?></td>
+                  <tr> 
+                        <td><?php echo $nome ?></td>
+                        <td><?php echo $nome_faculdade ?></td>
+                        <td><?php echo $municipio ?></td>
+                        <td><?php echo $semestre ?></td>
+                        <td><?php echo $comprovante ?></td>
+                        <td><?php echo $contrato_transporte ?></td>
 
-                    <td>
-                       <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
-                   </td>
+                        <td>
+                            <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
+
+                            <a href="index.php?pag=<?php echo $pag ?>&funcao=endereco&id=<?php echo $id ?>" class='text-info mr-1' title='Ver Endereço'><i class='fas fa-home'></i></a>
+                        </td>
                </tr>
            <?php } ?>
 
@@ -85,11 +91,15 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                     $titulo = "Editar Registro";
                     $id2 = $_GET['id'];
 
-                    $query = $pdo->query("SELECT * FROM documentos where id = '" . $id2 . "' ");
+                    $query = $pdo->query("SELECT * FROM dados_faculdade where id_usuario = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
-                      $documentos2 = $res[0]['documentos'];
-                      $obs = $res[0]['obs'];
+                    $nome_faculdade2 = $res[0]['nome_faculdade'];
+                    $municipio2 = $res[0]['municipio'];
+                    $id_usuario2 = $res[0]['id_usuario'];
+                    $semestre2 = $res[0]['semestre'];
+                    $comprovante2 = $res[0]['comprovante'];
+                    $contrato_transporte2 = $res[0]['contrato_transporte'];
 
 
 
@@ -110,12 +120,27 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label >Inserir Documentos</label>
-                        <input value="<?php echo @$documentos2 ?>" type="file" class="form-control" id="arquivo" name="arquivo">
+                        <label >Nome da Faculdade</label>
+                        <input value="<?php echo @$nome_faculdade2 ?>" type="text" class="form-control" id="nome_faculdade" name="nome_faculdade" placeholder="Nome da Faculdade">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                           <div class="form-group">
+                            <label >Município da Faculdade</label>
+                            <input value="<?php echo @$municipio2 ?>" type="text" class="form-control" id="municipio" name="municipio" placeholder="Município da Faculdade">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                           <div class="form-group">
+                            <label >Semestre</label>
+                            <input value="<?php echo @$semestre2 ?>" type="text" class="form-control" id="semestre" name="semestre" placeholder="Semestre">
+                        </div>
                     </div>
 
                     
-                    
+                    </div>
 
                     <small>
                         <div id="mensagem">
@@ -199,34 +224,29 @@ if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
                     
                     $id2 = $_GET['id'];
 
-                    $query = $pdo->query("SELECT * FROM dados_pessoais where id = '$id2' ");
+                    $query = $pdo->query("SELECT * FROM dados_faculdade where id_usuario = '$id2' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
                     
-                      $nome3 = $res[0]['nome'];
-                      $cpf3 = $res[0]['cpf'];
-                      $rg3 = $res[0]['rg'];
-                      $org_exp3 = $res[0]['org_exp '];
-                      $rg3 = $res[0]['rg'];
-                      $org_exp3 = $res[0]['orgao_exp'];
-                      $nis3 = $res[0]['nis'];
-                      $nasc3 = $res[0]['nasc'];
-                      $rua3 = $res[0]['rua'];
-                      $bairro3 = $res[0]['bairro'];
-                      $cep3 = $res[0]['cep'];
-                      $uf3 = $res[0]['uf'];
-                      $email3 = $res[0]['email'];
-                      $telefone3 = $res[0]['telefone'];
+                      $comprovante3 = $res[0]['comprovante'];
+                      $contrato_transporte3 = $res[0]['contrato_transporte'];
+                      $id_usuario3 = $res[0]['id_usuario'];
+                
                 } 
 
+                    $query = $pdo->query("SELECT * FROM usuario where id = '$id_usuario3' ");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                    $nome_usu = @$res[0]['nome'];
+                    $idUsuario = @$res[0]['id']; 
+
+                    $nome_pasta = $idUsuario." - ".$nome_usu;
 
                 ?>
 
-                    <span><b>Nome: </b> <i><?php echo $nome3 ?></i><br>
-                    <span><b>Rua: </b> <i><?php echo $rua3 ?></i> <span class="ml-4"><b>Bairro: </b> <i><?php echo $bairro3 ?></i><br>
-                    <span><b>UF: </b> <i><?php echo $uf3 ?><br>
-                    <span><b>CEP: </b> <i><?php echo $cep3 ?><br>
-                    <span><b>Telefone: </b> <i><?php echo $telefone3 ?><br>
-                    <span><b>Email: </b> <i><?php echo $email3 ?><br>
+                    <span><b>Comprovante de matrícula: </b> <a target="_blank" href="../painel-aluno/arquivos-alunos/<?php echo $nome_pasta ?>/<?php echo $comprovante3 ?>"><i><?php echo $comprovante3 ?></i></a><br>
+
+                    <span><b>Comprovante de Contrato: </b> <a target="_blank" href="../painel-aluno/arquivos-alunos/<?php echo $nome_pasta ?>/<?php echo $contrato_transporte3 ?>"><i><?php echo $contrato_transporte3 ?></i></a><br>
+                    
 
             </div>
             

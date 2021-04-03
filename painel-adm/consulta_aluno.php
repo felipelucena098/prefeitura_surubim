@@ -1,31 +1,13 @@
 <?php 
- require_once("../conexao.php"); 
+require_once("../conexao.php"); 
 
 @session_start();
     //verificar se o usuário está autenticado
-if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '2'){
+if(@$_SESSION['id_usuario'] == null || @$_SESSION['nivel_usuario'] != '1'){
     echo "<script language='javascript'> window.location='../login.php' </script>";
-
-$query = $pdo->query("SELECT * FROM usuario where id = '$_SESSION[id_usuario]'");
-$res = $query->fetchAll(PDO::FETCH_ASSOC);
-$nome_usu = @$res[0]['nome'];
-$email_usu = @$res[0]['email'];
-$cpf_usu = @$res[0]['cpf'];
-$senha_usu =@$res[0]['senha'];
-$idUsuario = @$res[0]['id'];    
-
 }
 
 ?>
-
-<div class="row mt-4 mb-4">
-    <a type="button" id="cadastrar" class="btn-info btn-sm ml-3 d-none d-md-block"  href="index.php?pag=<?php echo $pag ?>&funcao=novo">Cadastrar Dados Iniciais</a>
-    <a type="button" class="btn-info btn-sm ml-3 d-block d-sm-none" href="index.php?pag=<?php echo $pag ?>&funcao=novo">+</a>
-    
-</div>
-
-
-
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
 
@@ -35,12 +17,7 @@ $idUsuario = @$res[0]['id'];
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>Documentos</th>
                         <th>CPF</th>
-                        <th>RG</th>
-                        <th>Orgão Expedidor</th>
-                        <th>NIS</th>
-                        <th>Data de Nascimento</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -49,7 +26,7 @@ $idUsuario = @$res[0]['id'];
 
                  <?php 
 
-                 $query = $pdo->query("SELECT * FROM dados_pessoais where id_usuario = '" . $idUsuario . "' ");
+                 $query = $pdo->query("SELECT * FROM dados_pessoais where filtro != '1' ");
                  $res = $query->fetchAll(PDO::FETCH_ASSOC);
 
                  for ($i=0; $i < count($res); $i++) { 
@@ -57,38 +34,22 @@ $idUsuario = @$res[0]['id'];
                   }
 
                     $nome = $res[$i]['nome'];
-                    $documentos = $res[$i]['documentos'];
                     $cpf = $res[$i]['cpf'];
-                    $rg = $res[$i]['rg'];
-                    $orgao_exp = $res[$i]['orgao_exp'];
-                    $rg = $res[$i]['rg'];
-                    $nis = $res[$i]['nis'];
-                    $nasc = $res[$i]['nasc'];
-                    $rua = $res[$i]['rua'];
-                    $bairro = $res[$i]['bairro'];
-                    $cep = $res[$i]['cep'];
-                    $uf = $res[$i]['uf'];
-                    $email = $res[$i]['email'];
-                    $telefone = $res[$i]['telefone'];
-                    $id = $res[$i]['id'];
-
+                    $id = $res[$i]['id']; 
+                    $id_usuario = $res[$i]['id_usuario']; 
 
                   ?>
 
 
                   <tr>
                         <td><?php echo $nome ?></td>
-                        <td><?php echo $documentos ?></td>;
                         <td><?php echo $cpf ?></td>
-                        <td><?php echo $rg ?></td>
-                        <td><?php echo $orgao_exp ?></td>
-                        <td><?php echo $nis ?></td>
-                        <td><?php echo $nasc ?></td>
+    
+                        
 
 
                     <td>
-                        <a href="index.php?pag=<?php echo $pag ?>&funcao=editar&id=<?php echo $id ?>" class='text-primary mr-1' title='Editar Dados'><i class='far fa-edit'></i></a>
-                        <a href="index.php?pag=<?php echo $pag ?>&funcao=endereco&id=<?php echo $id ?>" class='text-info mr-1' title='Ver Endereço'><i class='fas fa-home'></i></a>
+                       <a href="index.php?pag=<?php echo $pag ?>&funcao=validacao&id_usuario=<?php echo $id_usuario ?>" class='text-primary mr-1' title='Validar'><i class="far fa-check-square"></i></a>
                    </td>
                </tr>
            <?php } ?>
@@ -116,6 +77,7 @@ $idUsuario = @$res[0]['id'];
                 if (@$_GET['funcao'] == 'editar') {
                     $titulo = "Editar Registro";
                     $id2 = $_GET['id'];
+                    $id3 = $_GET['id_usuario'];
 
                     $query = $pdo->query("SELECT * FROM dados_pessoais where id = '" . $id2 . "' ");
                     $res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -136,6 +98,7 @@ $idUsuario = @$res[0]['id'];
                       $email2 = $res[0]['email'];
                       $telefone2 = $res[0]['telefone'];
                       $id_usuario = $res[0]['id_usuario'];
+                      $limitar_update2 = $res[0]['limitar_update'];
 
 
 
@@ -155,16 +118,14 @@ $idUsuario = @$res[0]['id'];
             <form id="form" method="POST" action="../inserir.php" enctype="multipart/form-data">
                 <div class="modal-body">
 
-                    <div class="form-group">
-                        <label >Nome</label>
-                        <input value="<?php echo @$nome2 ?>" type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
-                    </div>
+                    
 
                     <div class="row">
                         <div class="col-md-6">
                            <div class="form-group">
                             <label >CPF</label>
                             <input value="<?php echo @$cpf2 ?>" type="text" class="form-control" id="cpf" name="cpf" placeholder="CPF">
+                        </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -174,93 +135,9 @@ $idUsuario = @$res[0]['id'];
                     </div>
 
                 </div>
-            </div>
+            
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Orgão Expedidor</label>
-                        <input value="<?php echo @$org_exp2 ?>" type="text" class="form-control" id="orgao_exp" name="orgao_exp" placeholder="Orgão Expedidor">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Data de Nascimento</label>
-                        <input value="<?php echo @$nasc2 ?>" type="text" class="form-control" id="nasc" name="nasc" placeholder="Data de Nascimento">
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >NIS</label>
-                        <input value="<?php echo @$nis2 ?>" type="text" class="form-control" id="nis" name="nis" placeholder="NIS">
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Rua</label>
-                        <input value="<?php echo @$rua2 ?>" type="text" class="form-control" id="rua" name="rua" placeholder="Rua">
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                         <label >Bairro</label>
-                        <input value="<?php echo @$bairro2 ?>" type="text" class="form-control" id="bairro" name="bairro" placeholder="Rua">
-                        
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >UF</label>
-                        <input value="<?php echo @$uf2 ?>" type="text" class="form-control" id="uf" name="uf" placeholder="UF">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                    <label >CEP</label>
-                    <input value="<?php echo @$cep2 ?>" type="text" class="form-control" id="cep" name="cep" placeholder="CEP">
-             </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >E-Mail</label>
-                        <input value="<?php echo @$email2 ?>" type="email" class="form-control" id="email" name="email" placeholder="E-mail">
-                        
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Telefone</label>
-                        <input value="<?php echo @$telefone2 ?>" type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
-                    </div>
-
-                    
-
-                </div>
-
-                <div class="form-group">
-                        <label >Anexar Documentos</label>
-                        <input type="file" class="form-control" id="documentos" name="documentos">
-                </div>
-
-                
-            </div>
-
+      
             
 
 
@@ -279,6 +156,92 @@ $idUsuario = @$res[0]['id'];
 
 
                     <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
+                    <input value="<?php echo @$cpf2 ?>" type="hidden" name="antigo" id="antigo">
+                    <input value="<?php echo @$email2 ?>" type="hidden" name="antigo2" id="antigo2">
+
+                    <button type="button" id="btn-fechar" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="btn-salvar" id="btn-salvar" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End -->
+
+<div class="modal fade" id="modal-validacao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <?php 
+                if (@$_GET['funcao'] == 'validacao') {
+                    $titulo = "Validar Documentos";
+                    $id3 = $_GET['id_usuario'];
+
+                    $query = $pdo->query("SELECT * FROM dados_pessoais where id = '" . $id3 . "' ");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                    
+
+
+
+                } else {
+                    $titulo = "Inserir Registro";
+
+                }
+
+
+                ?>
+                
+                <h5 class="modal-title" id="exampleModalLabel"><?php echo $titulo ?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form" method="POST" action="../painel-adm/acompanhar_bolsa/inserir.php">
+                <div class="modal-body">
+
+                    
+                      <div class="form-group">
+                          <label >Situação da Documentação</label>
+                          <input  type="text" class="form-control" id="s_documento" name="s_documento">
+                      </div>
+
+                      <div class="form-group">
+                          <label >Situação da Documentação Universitária</label>
+                          <input  type="text" class="form-control" id="s_matricula" name="s_matricula">
+                      </div>
+
+                      <div class="form-group">
+                          <label >Valor da Bolsa</label>
+                          <input  type="text" class="form-control" id="valor_b" name="valor_b">
+                      </div>
+                      <div class="form-group">
+                          <label>Documentação Pessoal</label>
+                          <select id="opcoes" name="opcoes" required="">
+                              <option selected=""></option>
+                              <option value="1">Documentação Pessoal Aprovada</option>
+                              <option value="0">Documentação Pessoal Reprovada</option>                          
+                            </select>
+                      </div>
+
+
+
+                    <small>
+                        <div id="mensagem">
+
+                        </div>
+                    </small> 
+
+                </div>
+
+
+
+                <div class="modal-footer">
+
+
+
+                    <input value="<?php echo @$_GET['id'] ?>" type="hidden" name="txtid2" id="txtid2">
+                    <input value="<?php echo @$_GET['id_usuario'] ?>" type="hidden" name="txtid3" id="txtid3">
                     <input value="<?php echo @$cpf2 ?>" type="hidden" name="antigo" id="antigo">
                     <input value="<?php echo @$email2 ?>" type="hidden" name="antigo2" id="antigo2">
 
@@ -345,6 +308,7 @@ $idUsuario = @$res[0]['id'];
                 <?php 
                 if (@$_GET['funcao'] == 'endereco') {
                     
+
                     $id2 = $_GET['id'];
 
                     $query = $pdo->query("SELECT * FROM dados_pessoais where id = '$id2' ");
@@ -364,8 +328,18 @@ $idUsuario = @$res[0]['id'];
                       $uf3 = $res[0]['uf'];
                       $email3 = $res[0]['email'];
                       $telefone3 = $res[0]['telefone'];
+                      $documentos3 = $res[0]['documentos'];
+                      $id_usuario3 = $res[0]['id_usuario'];
                 } 
 
+                 $query = $pdo->query("SELECT * FROM usuario where id = '$id_usuario3' ");
+                    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
+                    $nome_usu = @$res[0]['nome'];
+                    $idUsuario = @$res[0]['id']; 
+
+                    $nome_pasta = $idUsuario." - ".$nome_usu;
+                    
 
                 ?>
 
@@ -375,12 +349,16 @@ $idUsuario = @$res[0]['id'];
                     <span><b>CEP: </b> <i><?php echo $cep3 ?><br>
                     <span><b>Telefone: </b> <i><?php echo $telefone3 ?><br>
                     <span><b>Email: </b> <i><?php echo $email3 ?><br>
+                    <span><b>Documentos: </b> <a target="_blank" href="../painel-aluno/arquivos-alunos/<?php echo $nome_pasta ?>/<?php echo $documentos3 ?>"><i><?php echo $documentos3 ?><br>
 
             </div>
             
         </div>
     </div>
 </div>
+
+
+
 
 
 
@@ -402,6 +380,12 @@ if (@$_GET["funcao"] != null && @$_GET["funcao"] == "excluir") {
 if (@$_GET["funcao"] != null && @$_GET["funcao"] == "endereco") {
     echo "<script>$('#modal-endereco').modal('show');</script>";
 }
+
+if (@$_GET["funcao"] != null && @$_GET["funcao"] == "validacao") {
+    echo "<script>$('#modal-validacao').modal('show');</script>";
+}
+
+
 
 ?>
 

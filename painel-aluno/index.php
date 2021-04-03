@@ -125,21 +125,9 @@ $idUsuario = @$res[0]['id'];
                 </li>
 
                 <!-- Divider -->
-                <hr class="sidebar-divider">
-
+          
                 <!-- Heading -->
-                <div class="sidebar-heading">
-                    Consultas
-                </div>
-
-
-
-                <!-- Nav Item - Charts -->
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?pag=<?php echo $menu6 ?>">
-                        <i class="fas fa-fw fa-chart-area"></i>
-                        <span>Menu 6</span></a>
-                </li>
+              
 
                 <!-- Nav Item - Tables -->
               
